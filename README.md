@@ -48,32 +48,75 @@ rfkill unblock wlan
 Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](files/auth.pcap) avec Wireshark et fournir des captures d’écran indiquant dans chaque capture les données demandées.
 
 - Comparer [la capture](files/auth.pcap) au processus d’authentification donné en théorie (n’oubliez pas les captures d'écran pour illustrer vos comparaisons !). En particulier, identifier les étapes suivantes :
-	- Requête et réponse d’authentification système ouvert
- 	- Requête et réponse d’association (ou reassociation)
-	- Négociation de la méthode d’authentification entreprise
-	- Phase d’initiation. Arrivez-vous à voir l’identité du client ?
-	- Phase hello :
+	- Requête et réponse d’authentification système ouvert (1) 
+![Echange](./files/1.1.PNG)
+![WireShark](./files/1.2.PNG)
+![client](./files/1.3.PNG)
+![server](./files/1.4.PNG)
+ 	- Requête et réponse d’association (ou reassociation) (2)
+![Echange](./files/2.1.PNG)
+![WireShark](./files/2.2.PNG)
+![client](./files/2.3.PNG)
+![server](./files/2.4.PNG)
+	- Négociation de la méthode d’authentification entreprise (3) 
+![WireShark](./files/3.1.PNG)
+![Request](./files/3.2.PNG)
+![ResponseNaK](./files/3.3.PNG)
+![RequestOK](./files/3.4.PNG)
+	- Phase d’initiation. Arrivez-vous à voir l’identité du client ? (4)
+![Echange](./files/4.1.PNG)
+![WireShark](./files/4.2.PNG)
+![identity](./files/4.4.PNG)
+		> **Oui**, on peut voir l'identité du client (joell.gonin sur \einet)
+	- Phase hello : (5)
+![WireShark](./files/5.2.PNG)
+![Request](./files/5.3.PNG)
+![Request](./files/5.4.PNG)
 		- Version TLS
+		> **_TLS 1.0_** 
 		- Suites cryptographiques et méthodes de compression proposées par le client et acceptées par l’AP
+		> **_Proposée : Liste ci-dessous et pas de méthode de compression_** 
+		![Response](./files/5.3.2.PNG)
+		> **_Acceptée : Cipher Suite: TLS_RSA_WITH_AES_256_CBC_SHA (0x0035)_**
+		![Response](./files/5.4.2.PNG)
 		- Nonces
+		> **_Client :_** Random: 955bf5b716e24a729c4b60609b8ce482014ac38f1e9cb8cf2bf8fd30bf8995f1
+
+		> **_Serveur:_** Random: 003b6c2676ffd79814e56c065e5b0c39cb26600148ca1e9b3e8af83426d46e11
 		- Session ID
-	- Phase de transmission de certificats
+		> **_Client :_** Session ID: 9f1bbf1e90b88366a836db08d659f906a637ac31920e06f622762ca6c522a64f
+
+		> **_Serveur:_** Session ID: ad41641ec2a7d1d5a9f6586c05703a8cbdbf6ef0053ad517f6e69b286804f5f2
+	- Phase de transmission de certificats (6)
+![WireShark](./files/6.PNG)
+![Request](./files/6.1.PNG)
+
+
+
 	 	- Echanges des certificats
+![Response](./files/6.2.PNG)
 		- Change cipher spec
-	- Authentification interne et transmission de la clé WPA (échange chiffré, vu comme « Application data »)
-	- 4-way handshake
+![Request](./files/6.3.PNG)
+	- Authentification interne et transmission de la clé WPA (échange chiffré, vu comme « Application data ») (7)
+![WireShark](./files/7.PNG)
+![Request](./files/7.1.PNG)
+	- 4-way handshake (8)
+![WireShark](./files/8.PNG)
+> **_Remarque_** Nous trouvions surprenant que le 4-way handshake suivant notre analyse n'avait pas de message 2/4 et 2x le 3. Nous avons donc mis un autre 4 way handshake que l'on trouve plus loin dans la capture Wireshark (un autre AP?)
+![Request](./files/8.1.PNG)
+![Request](./files/8.2.PNG)
 
 ### Répondez aux questions suivantes :
  
 > **_Question :_** Quelle ou quelles méthode(s) d’authentification est/sont proposé(s) au client ?
 > 
-> **_Réponse :_** 
+> **_Réponse :_** On peut voir au point 1.3 que la méthode initialement proposée est la TLS EAP. Néamoins le client répond négativement et demande explicitement du PEAP.
 
 ---
 
 > **_Question:_** Quelle méthode d’authentification est finalement utilisée ?
 > 
-> **_Réponse:_** 
+> **_Réponse:_** C'est la méthode PEAP qui, comme demandée par le client et utilisée. A noter qu'on le voit dans les captures de plusieurs paquet par la suite et que contrairement à TLS, on utilise uniquement des certificats provenant du serveur et pas du client. 
 
 ---
 
@@ -81,16 +124,18 @@ Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](
 > 
 > - a. Le serveur envoie-t-il un certificat au client ? Pourquoi oui ou non ?
 > 
-> **_Réponse:_**
+> **_Réponse:_** Oui, obligatoire en WPA2 entreprise que ce soit pour du PEAP ou du TLS
 > 
 > - b. Le client envoie-t-il un certificat au serveur ? Pourquoi oui ou non ?
 > 
-> **_Réponse:_**
+> **_Réponse:_** Non, comme la méthode qui a été choisis et PEAP, il n'y a pas d'échange de certificat provenant du client.
 > 
 
 ---
 
 ### 2. (__Optionnel__) Attaque WPA Entreprise (hostapd)
+
+> **_Nous n'avons pas pu faire le point suivant_** 
 
 Les réseaux utilisant une authentification WPA Entreprise sont considérés aujourd’hui comme étant très surs. En effet, puisque la Master Key utilisée pour la dérivation des clés WPA est générée de manière aléatoire dans le processus d’authentification, les attaques par dictionnaire ou brute-force utilisés sur WPA Personnel ne sont plus applicables. 
 
@@ -126,6 +171,7 @@ Pour implémenter l’attaque :
 
 
 ### 3. (__Optionnel__) GTC Downgrade Attack avec [EAPHammer](https://github.com/s0lst1c3/eaphammer) 
+> **_Nous n'avons pas pu faire le point suivant_** 
 
 [EAPHammer](https://github.com/s0lst1c3/eaphammer) est un outil de nouvelle génération pour les attaques WPA Entreprise. Il peut en particulier faire une attaque de downgrade GTC, pour tenter de capturer les identifiants du client en clair, ce qui évite le besoin de l'attaque par dictionnaire.
 
