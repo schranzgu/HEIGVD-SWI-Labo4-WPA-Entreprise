@@ -49,7 +49,7 @@ Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](
 
 - Comparer [la capture](files/auth.pcap) au processus d’authentification donné en théorie (n’oubliez pas les captures d'écran pour illustrer vos comparaisons !). En particulier, identifier les étapes suivantes :
 	- Requête et réponse d’authentification système ouvert (1) 
-![Echange](./files/1.1.PNG)
+![Echange](./files/Images/1.1.PNG)
 ![WireShark](./files/1.2.PNG)
 ![client](./files/1.3.PNG)
 ![server](./files/1.4.PNG)
