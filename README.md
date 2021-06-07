@@ -50,35 +50,35 @@ Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](
 - Comparer [la capture](files/auth.pcap) au processus d’authentification donné en théorie (n’oubliez pas les captures d'écran pour illustrer vos comparaisons !). En particulier, identifier les étapes suivantes :
 	- Requête et réponse d’authentification système ouvert (1) 
 ![Echange](./files/Images/1.1.png)
-![WireShark](./files/1.2.PNG)
-![client](./files/1.3.PNG)
-![server](./files/1.4.PNG)
+![WireShark](./files/Images/1.2.png)
+![client](./files/Images/1.3.png)
+![server](./files/Images/1.4.png)
  	- Requête et réponse d’association (ou reassociation) (2)
-![Echange](./files/2.1.PNG)
-![WireShark](./files/2.2.PNG)
-![client](./files/2.3.PNG)
-![server](./files/2.4.PNG)
+![Echange](./files/Images/2.1.png)
+![WireShark](./files/Images/2.2.png)
+![client](./files/Images/2.3.png)
+![server](./files/Images/2.4.png)
 	- Négociation de la méthode d’authentification entreprise (3) 
-![WireShark](./files/3.1.PNG)
-![Request](./files/3.2.PNG)
-![ResponseNaK](./files/3.3.PNG)
-![RequestOK](./files/3.4.PNG)
+![WireShark](./files/Images/3.1.png)
+![Request](./files/Images/3.2.png)
+![ResponseNaK](./files/Images/3.3.png)
+![RequestOK](./files/Images/3.4.png)
 	- Phase d’initiation. Arrivez-vous à voir l’identité du client ? (4)
-![Echange](./files/4.1.PNG)
-![WireShark](./files/4.2.PNG)
-![identity](./files/4.4.PNG)
+![Echange](./files/Images/4.1.png)
+![WireShark](./files/Images/4.2.png)
+![identity](./files/Images/4.4.png)
 		> **Oui**, on peut voir l'identité du client (joell.gonin sur \einet)
 	- Phase hello : (5)
-![WireShark](./files/5.2.PNG)
-![Request](./files/5.3.PNG)
-![Request](./files/5.4.PNG)
+![WireShark](./files/Images/5.2.png)
+![Request](./files/Images/5.3.png)
+![Request](./files/Images/5.4.png)
 		- Version TLS
 		> **_TLS 1.0_** 
 		- Suites cryptographiques et méthodes de compression proposées par le client et acceptées par l’AP
 		> **_Proposée : Liste ci-dessous et pas de méthode de compression_** 
-		![Response](./files/5.3.2.PNG)
+		![Response](./files/Images/5.3.2.png)
 		> **_Acceptée : Cipher Suite: TLS_RSA_WITH_AES_256_CBC_SHA (0x0035)_**
-		![Response](./files/5.4.2.PNG)
+		![Response](./files/Images/5.4.2.png)
 		- Nonces
 		> **_Client :_** Random: 955bf5b716e24a729c4b60609b8ce482014ac38f1e9cb8cf2bf8fd30bf8995f1
 
@@ -88,23 +88,23 @@ Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](
 
 		> **_Serveur:_** Session ID: ad41641ec2a7d1d5a9f6586c05703a8cbdbf6ef0053ad517f6e69b286804f5f2
 	- Phase de transmission de certificats (6)
-![WireShark](./files/6.PNG)
-![Request](./files/6.1.PNG)
+![WireShark](./files/Images/6.png)
+![Request](./files/Images/6.1.png)
 
 
 
 	 	- Echanges des certificats
-![Response](./files/6.2.PNG)
+![Response](./files/Images/6.2.png)
 		- Change cipher spec
-![Request](./files/6.3.PNG)
+![Request](./files/Images/6.3.png)
 	- Authentification interne et transmission de la clé WPA (échange chiffré, vu comme « Application data ») (7)
-![WireShark](./files/7.PNG)
-![Request](./files/7.1.PNG)
+![WireShark](./files/Images/7.png)
+![Request](./files/Images/7.1.png)
 	- 4-way handshake (8)
-![WireShark](./files/8.PNG)
+![WireShark](./files/Images/8.png)
 > **_Remarque_** Nous trouvions surprenant que le 4-way handshake suivant notre analyse n'avait pas de message 2/4 et 2x le 3. Nous avons donc mis un autre 4 way handshake que l'on trouve plus loin dans la capture Wireshark (un autre AP?)
-![Request](./files/8.1.PNG)
-![Request](./files/8.2.PNG)
+![Request](./files/Images/8.1.png)
+![Request](./files/Images/8.2.png)
 
 ### Répondez aux questions suivantes :
  
